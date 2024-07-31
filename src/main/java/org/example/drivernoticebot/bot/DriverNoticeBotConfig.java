@@ -7,10 +7,10 @@ import org.springframework.context.annotation.Configuration;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
-@Configuration
-@RequiredArgsConstructor
-public class DriverNoticeBotConfig {
-    private final BotConfig botConfig;
+/*@Configuration
+@RequiredArgsConstructor*/
+//public class DriverNoticeBotConfig {
+   /* private final BotConfig botConfig;
     private final DriverRepository repository;
 
     @Bean
@@ -23,5 +23,5 @@ public class DriverNoticeBotConfig {
             e.printStackTrace();
         }
         return driverNoticeBot;
-    }
-}
+    }*/
+//}

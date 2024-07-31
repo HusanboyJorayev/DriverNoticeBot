@@ -22,13 +22,13 @@ import java.time.format.DateTimeParseException;
 import java.util.*;
 
 
-@Component
-@RequiredArgsConstructor
-public class DriverNoticeBot extends TelegramLongPollingBot {
-
+/*@Component
+@RequiredArgsConstructor*/
+//public class DriverNoticeBot/* extends TelegramLongPollingBot*/ {
+/*
     private final BotConfig botConfig;
-    private final Map<Long, Integer> userStates = new HashMap<>();
     private final DriverRepository repository;
+    private final Map<Long, Integer> userStates = new HashMap<>();
     private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     @Override
@@ -113,7 +113,7 @@ public class DriverNoticeBot extends TelegramLongPollingBot {
                                     submitButton(chatId);
                                 }
                             }
-                            userStates.put(chatId, 6);
+                            userStates.put(chatId, 0);
                             break;
                         default:
                             break;
@@ -299,11 +299,11 @@ public class DriverNoticeBot extends TelegramLongPollingBot {
 
     @Override
     public String getBotUsername() {
-        return botConfig.getBotName();
+        return "botConfig.getBotName()";
     }
 
     @Override
     public String getBotToken() {
-        return botConfig.getBotToken();
-    }
-}
+        return "botConfig.getBotToken()";
+    }*/
+//}
