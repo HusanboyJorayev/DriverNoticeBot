@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
+import org.telegram.telegrambots.meta.api.methods.send.SendAnimation;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendVoice;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
@@ -21,6 +22,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -78,6 +80,41 @@ public class DriverNoticeBot2 extends TelegramLongPollingBot {
             }
             try {
                 currency(update, chatId);
+            } catch (TelegramApiException e) {
+                throw new RuntimeException(e);
+            }
+            try {
+                sports(update, chatId);
+            } catch (TelegramApiException e) {
+                throw new RuntimeException(e);
+            }
+            try {
+                music(update, chatId);
+            } catch (TelegramApiException e) {
+                throw new RuntimeException(e);
+            }
+            try {
+                cartoon(update, chatId);
+            } catch (TelegramApiException e) {
+                throw new RuntimeException(e);
+            }
+            try {
+                news(update, chatId);
+            } catch (TelegramApiException e) {
+                throw new RuntimeException(e);
+            }
+            try {
+                test(update, chatId);
+            } catch (TelegramApiException e) {
+                throw new RuntimeException(e);
+            }
+            try {
+                gift(update, chatId);
+            } catch (TelegramApiException e) {
+                throw new RuntimeException(e);
+            }
+            try {
+                game(update, chatId);
             } catch (TelegramApiException e) {
                 throw new RuntimeException(e);
             }
@@ -287,6 +324,131 @@ public class DriverNoticeBot2 extends TelegramLongPollingBot {
         }
     }
 
+    private void sports(Update update, Long chatId) throws TelegramApiException {
+        if (update.getMessage().getText().equalsIgnoreCase("SPORTS \uD83D\uDFE2")) {
+            if (this.repository.existsByChatId(chatId)) {
+                execute(new SendMessage(chatId.toString(), "THERE IS NO INFORMATION "));
+            } else {
+                execute(new SendMessage(chatId.toString(), "BEFORE SEE SPORTS , REGISTER PLEASE"));
+
+            }
+        }
+    }
+
+    private void music(Update update, Long chatId) throws TelegramApiException {
+        if (update.getMessage().getText().equalsIgnoreCase("MUSIC \uD83D\uDFE2")) {
+            if (this.repository.existsByChatId(chatId)) {
+                execute(new SendMessage(chatId.toString(), "THERE IS NO INFORMATION "));
+            } else {
+                execute(new SendMessage(chatId.toString(), "BEFORE SEE MUSIC , REGISTER PLEASE"));
+
+            }
+        }
+    }
+
+    private void cartoon(Update update, Long chatId) throws TelegramApiException {
+        if (update.getMessage().getText().equalsIgnoreCase("CARTOON \uD83D\uDFE2")) {
+            if (this.repository.existsByChatId(chatId)) {
+                execute(new SendMessage(chatId.toString(), "THERE IS NO INFORMATION "));
+            } else {
+                execute(new SendMessage(chatId.toString(), "BEFORE SEE CARTOON , REGISTER PLEASE"));
+
+            }
+        }
+    }
+
+    private void test(Update update, Long chatId) throws TelegramApiException {
+        if (update.getMessage().getText().equalsIgnoreCase("TEST \uD83D\uDFE2")) {
+            if (this.repository.existsByChatId(chatId)) {
+                sendPrivateMessageWithButton("PLEASE SUBMIT", "1630048369");
+            } else {
+                execute(new SendMessage(chatId.toString(), "BEFORE TEST , REGISTER PLEASE"));
+            }
+        }
+    }
+
+    private void game(Update update, Long chatId) throws TelegramApiException {
+        if (update.getMessage().getText().equalsIgnoreCase("GAME \uD83D\uDFE2")) {
+            if (this.repository.existsByChatId(chatId)) {
+                gameButton(chatId);
+            } else {
+                execute(new SendMessage(chatId.toString(), "BEFORE TEST , REGISTER PLEASE"));
+            }
+        } else if (update.getMessage().getText().equalsIgnoreCase("FIND NUMBER \uD83D\uDFE2")) {
+            if (this.repository.existsByChatId(chatId)) {
+                execute(new SendMessage(chatId.toString(), "ENTER THE NUMBER WHICH COMPUTER REMEMBERED (1,10)"));
+            }
+        }
+    }
+
+    private void gift(Update update, Long chatId) throws TelegramApiException {
+        if (update.getMessage().getText().equalsIgnoreCase("GIFT \uD83D\uDFE2")) {
+            if (this.repository.existsByChatId(chatId)) {
+                chooseGIFT(chatId);
+            } else {
+                execute(new SendMessage(chatId.toString(), "BEFORE SEE GIFT , REGISTER PLEASE"));
+            }
+        }
+        switch (update.getMessage().getText()) {
+            case "DANCING \uD83D\uDFE2": {
+                SendAnimation sendAnimation = new SendAnimation();
+                sendAnimation.setChatId(update.getMessage().getChatId().toString());
+                sendAnimation.setAnimation(new InputFile("https://media.giphy.com/media/26ufdipQqU2lhNA4g/giphy.gif"));
+                try {
+                    execute(sendAnimation);
+                } catch (TelegramApiException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            default:
+                break;
+        }
+    }
+
+    private void news(Update update, Long chatId) throws TelegramApiException {
+        if (update.getMessage().getText().equalsIgnoreCase("NEWS \uD83D\uDFE2")) {
+            if (this.repository.existsByChatId(chatId)) {
+                newsButton(chatId);
+            } else {
+                execute(new SendMessage(chatId.toString(), "BEFORE SEE NEWS , REGISTER PLEASE"));
+
+            }
+        }
+        if (update.getMessage().getText().equalsIgnoreCase("BIRTHDAY \uD83D\uDFE2")) {
+            if (this.repository.existsByChatId(chatId)) {
+                birthdayButton(chatId);
+            }
+        }
+        switch (update.getMessage().getText()) {
+            case "1 \uD83D\uDFE2":
+                execute(new SendMessage(chatId.toString(), "SIZ JUDA HAM AJOYIB INSONSIZ"));
+                break;
+            case "2 \uD83D\uDFE2":
+                execute(new SendMessage(chatId.toString(), "SIZ JUDA HAM ZOR INSONSIZ"));
+                break;
+            case "3 \uD83D\uDFE2":
+                execute(new SendMessage(chatId.toString(), "SIZ JUDA HAM ALO INSONSIZ"));
+                break;
+            case "4 \uD83D\uDFE2":
+                execute(new SendMessage(chatId.toString(), "SIZ JUDA HAM AQILLI INSONSIZ"));
+                break;
+            case "5 \uD83D\uDFE2":
+                execute(new SendMessage(chatId.toString(), "SIZ JUDA HAM GOOD INSONSIZ"));
+                break;
+            case "6 \uD83D\uDFE2":
+                execute(new SendMessage(chatId.toString(), "SIZ JUDA HAM PERFECT INSONSIZ"));
+                break;
+            case "7 \uD83D\uDFE2":
+                execute(new SendMessage(chatId.toString(), "SIZ JUDA HAM SECRET INSONSIZ"));
+                break;
+            case "8 \uD83D\uDFE2":
+                execute(new SendMessage(chatId.toString(), "SIZ JUDA HAM NICE INSONSIZ"));
+                break;
+            default:
+                break;
+        }
+    }
+
     private void currency(Update update, Long chatId) throws TelegramApiException {
         if (update.getMessage().getText().equalsIgnoreCase("CURRENCY RATE \uD83D\uDFE2")) {
             if (this.repository.existsByChatId(chatId)) {
@@ -322,84 +484,42 @@ public class DriverNoticeBot2 extends TelegramLongPollingBot {
 
             }
         }
+
         if (update.getMessage().getText().equalsIgnoreCase("ANDIJON \uD83D\uDFE2")) {
-            try {
-                execute(new SendMessage(chatId.toString(), weatherService.getWeather("ANDIJON")));
-            } catch (TelegramApiException e) {
-                throw new RuntimeException(e);
-            }
+            execute(new SendMessage(chatId.toString(), weatherService.getWeather("ANDIJON")));
         }
         if (update.getMessage().getText().equalsIgnoreCase("NAMANGAN \uD83D\uDFE2")) {
-            try {
-                execute(new SendMessage(chatId.toString(), weatherService.getWeather("NAMANGAN")));
-            } catch (TelegramApiException e) {
-                throw new RuntimeException(e);
-            }
+            execute(new SendMessage(chatId.toString(), weatherService.getWeather("NAMANGAN")));
         }
         if (update.getMessage().getText().equalsIgnoreCase("FERGANA \uD83D\uDFE2")) {
-            try {
-                execute(new SendMessage(chatId.toString(), weatherService.getWeather("FERGANA")));
-            } catch (TelegramApiException e) {
-                throw new RuntimeException(e);
-            }
+            execute(new SendMessage(chatId.toString(), weatherService.getWeather("FERGANA")));
         }
         if (update.getMessage().getText().equalsIgnoreCase("BUXORO \uD83D\uDFE2")) {
-            try {
-                execute(new SendMessage(chatId.toString(), weatherService.getWeather("BUXORO")));
-            } catch (TelegramApiException e) {
-                throw new RuntimeException(e);
-            }
+            execute(new SendMessage(chatId.toString(), weatherService.getWeather("BUXORO")));
         }
         if (update.getMessage().getText().equalsIgnoreCase("NAVOI \uD83D\uDFE2")) {
-            try {
-                execute(new SendMessage(chatId.toString(), weatherService.getWeather("NAVOI")));
-            } catch (TelegramApiException e) {
-                throw new RuntimeException(e);
-            }
+            execute(new SendMessage(chatId.toString(), weatherService.getWeather("NAVOI")));
         }
         if (update.getMessage().getText().equalsIgnoreCase("SAMARQAND \uD83D\uDFE2")) {
-            try {
-                execute(new SendMessage(chatId.toString(), weatherService.getWeather("SAMARQAND")));
-            } catch (TelegramApiException e) {
-                throw new RuntimeException(e);
-            }
+            execute(new SendMessage(chatId.toString(), weatherService.getWeather("SAMARQAND")));
         }
         if (update.getMessage().getText().equalsIgnoreCase("QASHQADARYO \uD83D\uDFE2")) {
-            try {
-                execute(new SendMessage(chatId.toString(), weatherService.getWeather("QASHQADARYO")));
-            } catch (TelegramApiException e) {
-                throw new RuntimeException(e);
-            }
+            execute(new SendMessage(chatId.toString(), weatherService.getWeather("QASHQADARYO")));
         }
         if (update.getMessage().getText().equalsIgnoreCase("JIZZAX \uD83D\uDFE2")) {
-            try {
-                execute(new SendMessage(chatId.toString(), weatherService.getWeather("JIZZAX")));
-            } catch (TelegramApiException e) {
-                throw new RuntimeException(e);
-            }
+            execute(new SendMessage(chatId.toString(), weatherService.getWeather("JIZZAX")));
         }
         if (update.getMessage().getText().equalsIgnoreCase("KHORAZM \uD83D\uDFE2")) {
-            try {
-                execute(new SendMessage(chatId.toString(), weatherService.getWeather("KHORAZM")));
-            } catch (TelegramApiException e) {
-                throw new RuntimeException(e);
-            }
+            execute(new SendMessage(chatId.toString(), weatherService.getWeather("KHORAZM")));
         }
         if (update.getMessage().getText().equalsIgnoreCase("TOSHKENT \uD83D\uDFE2")) {
-            try {
-                execute(new SendMessage(chatId.toString(), weatherService.getWeather("TOSHKENT")));
-            } catch (TelegramApiException e) {
-                throw new RuntimeException(e);
-            }
+            execute(new SendMessage(chatId.toString(), weatherService.getWeather("TOSHKENT")));
         }
         if (update.getMessage().getText().equalsIgnoreCase("SIRDARYO \uD83D\uDFE2")) {
-            try {
-                execute(new SendMessage(chatId.toString(), weatherService.getWeather("SIRDARYO")));
-            } catch (TelegramApiException e) {
-                throw new RuntimeException(e);
-            }
+            execute(new SendMessage(chatId.toString(), weatherService.getWeather("SIRDARYO")));
         }
     }
+
     private void update(Update update, int state, Long chatId) throws TelegramApiException {
         switch (state) {
             case 0:
@@ -635,9 +755,44 @@ public class DriverNoticeBot2 extends TelegramLongPollingBot {
         row3.add("SPORTS \uD83D\uDFE2");
         row3.add("CURRENCY RATE \uD83D\uDFE2");
 
+        KeyboardRow row4 = new KeyboardRow();
+        row4.add("TEST \uD83D\uDFE2");
+        row4.add("GIFT \uD83D\uDFE2");
+        row4.add("GAME \uD83D\uDFE2");
+
         keyboard.add(row1);
         keyboard.add(row2);
         keyboard.add(row3);
+        keyboard.add(row4);
+
+        replyKeyboardMarkup.setKeyboard(keyboard);
+
+        message.setReplyMarkup(replyKeyboardMarkup);
+
+        try {
+            execute(message);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void chooseGIFT(Long chatId) {
+        SendMessage message = new SendMessage();
+        message.setChatId(chatId.toString());
+        message.setText("✅CHOOSE YOUR GIF✅");
+
+        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+        replyKeyboardMarkup.setSelective(true);
+        replyKeyboardMarkup.setResizeKeyboard(true);
+        replyKeyboardMarkup.setOneTimeKeyboard(false);
+
+        List<KeyboardRow> keyboard = new ArrayList<>();
+
+        KeyboardRow row1 = new KeyboardRow();
+        row1.add("DANCING \uD83D\uDFE2");
+        row1.add("EXIT ✅");
+
+        keyboard.add(row1);
 
         replyKeyboardMarkup.setKeyboard(keyboard);
 
@@ -731,6 +886,175 @@ public class DriverNoticeBot2 extends TelegramLongPollingBot {
             e.printStackTrace();
         }
     }
+
+    public void newsButton(Long chatId) {
+        SendMessage message = new SendMessage();
+        message.setChatId(chatId.toString());
+        message.setText("✅CLICK YOUR INTEREST✅");
+
+        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+        replyKeyboardMarkup.setSelective(true);
+        replyKeyboardMarkup.setResizeKeyboard(true);
+        replyKeyboardMarkup.setOneTimeKeyboard(false);
+
+        List<KeyboardRow> keyboard = new ArrayList<>();
+
+        KeyboardRow row1 = new KeyboardRow();
+        row1.add("BIRTHDAY \uD83D\uDFE2");
+        row1.add("BURJ \uD83D\uDFE2");
+
+        KeyboardRow row2 = new KeyboardRow();
+        row2.add("EXIT ✅");
+
+        keyboard.add(row1);
+        keyboard.add(row2);
+
+        replyKeyboardMarkup.setKeyboard(keyboard);
+
+        message.setReplyMarkup(replyKeyboardMarkup);
+
+        try {
+            execute(message);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void gameButton(Long chatId) {
+        SendMessage message = new SendMessage();
+        message.setChatId(chatId.toString());
+        message.setText("✅CLICK GAME YOU WANT✅");
+
+        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+        replyKeyboardMarkup.setSelective(true);
+        replyKeyboardMarkup.setResizeKeyboard(true);
+        replyKeyboardMarkup.setOneTimeKeyboard(false);
+
+        List<KeyboardRow> keyboard = new ArrayList<>();
+
+        KeyboardRow row1 = new KeyboardRow();
+        row1.add("FIND NUMBER \uD83D\uDFE2");
+
+        KeyboardRow row2 = new KeyboardRow();
+        row2.add("EXIT ✅");
+
+        keyboard.add(row1);
+        keyboard.add(row2);
+
+        replyKeyboardMarkup.setKeyboard(keyboard);
+
+        message.setReplyMarkup(replyKeyboardMarkup);
+
+        try {
+            execute(message);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void birthdayButton(Long chatId) {
+        SendMessage message = new SendMessage();
+        message.setChatId(chatId.toString());
+        message.setText("✅CLICK YOUR BIRTHDAY✅");
+
+        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+        replyKeyboardMarkup.setSelective(true);
+        replyKeyboardMarkup.setResizeKeyboard(true);
+        replyKeyboardMarkup.setOneTimeKeyboard(false);
+
+        List<KeyboardRow> keyboard = new ArrayList<>();
+
+        KeyboardRow row1 = new KeyboardRow();
+        row1.add("1 \uD83D\uDFE2");
+        row1.add("2 \uD83D\uDFE2");
+        row1.add("3 \uD83D\uDFE2");
+        row1.add("4 \uD83D\uDFE2");
+        row1.add("5 \uD83D\uDFE2");
+
+        KeyboardRow row2 = new KeyboardRow();
+        row2.add("6 \uD83D\uDFE2");
+        row2.add("7 \uD83D\uDFE2");
+        row2.add("8 \uD83D\uDFE2");
+        row2.add("9 \uD83D\uDFE2");
+        row2.add("10 \uD83D\uDFE2");
+
+        KeyboardRow row3 = new KeyboardRow();
+        row3.add("11 \uD83D\uDFE2");
+        row3.add("12 \uD83D\uDFE2");
+        row3.add("13 \uD83D\uDFE2");
+        row3.add("14 \uD83D\uDFE2");
+        row3.add("15 \uD83D\uDFE2");
+
+        KeyboardRow row4 = new KeyboardRow();
+        row4.add("16 \uD83D\uDFE2");
+        row4.add("17 \uD83D\uDFE2");
+        row4.add("18 \uD83D\uDFE2");
+        row4.add("19 \uD83D\uDFE2");
+        row4.add("20 \uD83D\uDFE2");
+
+        KeyboardRow row5 = new KeyboardRow();
+        row5.add("21 \uD83D\uDFE2");
+        row5.add("22 \uD83D\uDFE2");
+        row5.add("23 \uD83D\uDFE2");
+        row5.add("24 \uD83D\uDFE2");
+        row5.add("25 \uD83D\uDFE2");
+
+        KeyboardRow row6 = new KeyboardRow();
+        row6.add("26 \uD83D\uDFE2");
+        row6.add("27 \uD83D\uDFE2");
+        row6.add("28 \uD83D\uDFE2");
+        row6.add("29 \uD83D\uDFE2");
+        row6.add("30 \uD83D\uDFE2");
+
+
+        KeyboardRow row7 = new KeyboardRow();
+        row7.add("EXIT ✅");
+
+        keyboard.add(row1);
+        keyboard.add(row2);
+        keyboard.add(row3);
+        keyboard.add(row4);
+        keyboard.add(row5);
+        keyboard.add(row6);
+        keyboard.add(row7);
+
+        replyKeyboardMarkup.setKeyboard(keyboard);
+
+        message.setReplyMarkup(replyKeyboardMarkup);
+
+        try {
+            execute(message);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendPrivateMessageWithButton(String text, String targetUserId) {
+        SendMessage message = new SendMessage();
+        message.setChatId(targetUserId); // SIZ HABAR JONATMOQCHI BOLGAN USERNING ID SI
+        message.setText(text);
+
+        InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> rows = new ArrayList<>();
+        List<InlineKeyboardButton> row = new ArrayList<>();
+
+        InlineKeyboardButton button1 = new InlineKeyboardButton();
+        button1.setText("TEST");
+        button1.setCallbackData("TEST");
+
+        row.add(button1);
+        rows.add(row);
+        markup.setKeyboard(rows);
+
+        message.setReplyMarkup(markup);
+
+        try {
+            execute(message);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public void updateFields(Long chatId) {
         SendMessage message = new SendMessage();

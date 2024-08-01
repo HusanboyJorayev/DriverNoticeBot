@@ -2,7 +2,6 @@ package org.example.drivernoticebot.bot;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.example.drivernoticebot.currency.CurrencyService;
 import org.example.drivernoticebot.weather.WeatherService;
 import org.example.drivernoticebot.repository.DriversRepository;
 import org.springframework.context.annotation.Bean;
