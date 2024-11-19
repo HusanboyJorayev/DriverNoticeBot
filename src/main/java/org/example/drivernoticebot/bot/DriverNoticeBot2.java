@@ -22,7 +22,6 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -64,7 +63,7 @@ public class DriverNoticeBot2 extends TelegramLongPollingBot {
             }
             int updates = updateStatus.getOrDefault(chatId, 0);
             try {
-                update(update, updates, chatId);
+                update(update, chatId);
             } catch (TelegramApiException e) {
                 throw new RuntimeException(e);
             }
@@ -190,7 +189,7 @@ public class DriverNoticeBot2 extends TelegramLongPollingBot {
                         driver.setStatus(update.getCallbackQuery().getData());
                         confirmMessage.setChatId(String.valueOf(callbackChatId));
                         confirmMessage.setText("ENTER FROM (DD/MM/YYYY)");
-                    } else if (update.getCallbackQuery().getData().equals("VOCATION")) {
+                    } else if (update.getCallbackQuery().getData().equals("VACATION")) {
                         driver.setStatus(update.getCallbackQuery().getData());
                         confirmMessage.setChatId(String.valueOf(callbackChatId));
                         confirmMessage.setText("ENTER FROM (DD/MM/YYYY)");
@@ -481,7 +480,6 @@ public class DriverNoticeBot2 extends TelegramLongPollingBot {
                 weatherButton(chatId);
             } else {
                 execute(new SendMessage(chatId.toString(), "BEFORE SEE WEATHER , REGISTER PLEASE"));
-
             }
         }
 
@@ -520,125 +518,8 @@ public class DriverNoticeBot2 extends TelegramLongPollingBot {
         }
     }
 
-    private void update(Update update, int state, Long chatId) throws TelegramApiException {
-        switch (state) {
-            case 0:
-                if (update.getMessage().getText().equalsIgnoreCase("UPDATE \uD83D\uDFE2")) {
-                    if (this.repository.existsByChatId(chatId)) {
-                        execute(new SendMessage(chatId.toString(), "ENTER NAME"));
-                        updateFields(chatId);
-                        updateStatus.put(chatId, 1);
-                    } else {
-                        execute(new SendMessage(chatId.toString(), "BEFORE UPDATE , REGISTER PLEASE"));
-                        updateStatus.put(chatId, 0);
-                    }
-                }
-                break;
-            case 1:
-                if (update.getMessage().getText().equalsIgnoreCase("EXIT ✅")) {
-                    updateStatus.put(chatId, 0);
-                } else if (repository.existsByChatId(chatId)) {
-                    Drivers driver = new Drivers();
-                    driver.setDriverName(update.getMessage().getText());
-                    this.repository.save(driver);
-                    execute(new SendMessage(chatId.toString(), "ENTER OFFICE"));
-                    updateStatus.put(chatId, 2);
-                }
-                break;
-            case 2:
-                if (update.getMessage().getText().equalsIgnoreCase("EXIT ✅")) {
-                    updateStatus.put(chatId, 0);
-                } else if (repository.existsByChatId(chatId)) {
-                    Optional<Drivers> notice = repository.findByChatId(chatId);
-                    Drivers driver = notice.get();
-                    driver.setOffice(update.getMessage().getText());
-                    this.repository.save(driver);
-                    execute(new SendMessage(chatId.toString(), "ENTER DISPATCHER"));
-                    updateStatus.put(chatId, 3);
-                }
-                break;
-            case 3:
-                if (update.getMessage().getText().equalsIgnoreCase("EXIT ✅")) {
-                    updateStatus.put(chatId, 0);
-                } else if (repository.existsByChatId(chatId)) {
-                    Optional<Drivers> notice = repository.findByChatId(chatId);
-                    Drivers driver = notice.get();
-                    driver.setDsp(update.getMessage().getText());
-                    this.repository.save(driver);
-                    statusButton(chatId);
-                    updateStatus.put(chatId, 4);
-                }
-                break;
-            case 4:
-                if (update.getMessage().getText().equalsIgnoreCase("EXIT ✅")) {
-                    updateStatus.put(chatId, 0);
-                } else if (isValidDate(update.getMessage().getText())) {
-                    if (repository.existsByChatId(chatId)) {
-                        Optional<Drivers> notice = repository.findByChatId(chatId);
-                        Drivers driver = notice.get();
-                        driver.setFromDate(update.getMessage().getText());
-                        this.repository.save(driver);
+    private void update(Update update, Long chatId) throws TelegramApiException {
 
-                        execute(new SendMessage(chatId.toString(), "ENTER TO (DD/MM/YYYY)"));
-                        updateStatus.put(chatId, 5);
-                    }
-                } else {
-                    execute(new SendMessage(chatId.toString(), "Invalid date format. Please enter the date in DD/MM/YYYY format"));
-
-                }
-                break;
-            case 5:
-                if (update.getMessage().getText().equalsIgnoreCase("EXIT ✅")) {
-                    updateStatus.put(chatId, 0);
-                } else if (isValidDate(update.getMessage().getText())) {
-                    if (repository.existsByChatId(chatId)) {
-                        Optional<Drivers> notice = repository.findByChatId(chatId);
-                        Drivers driver = notice.get();
-                        driver.setToDate(update.getMessage().getText());
-                        this.repository.save(driver);
-
-                        execute(new SendMessage(chatId.toString(), "ENTER ADDRESS"));
-                        updateStatus.put(chatId, 6);
-                    }
-                } else {
-                    execute(new SendMessage(chatId.toString(), "Invalid date format. Please enter the date in DD/MM/YYYY format"));
-
-                }
-                break;
-            case 6:
-                if (update.getMessage().getText().equalsIgnoreCase("EXIT ✅")) {
-                    updateStatus.put(chatId, 0);
-                } else if (repository.existsByChatId(chatId)) {
-                    Optional<Drivers> notice = repository.findByChatId(chatId);
-                    if (notice.isPresent()) {
-                        Drivers driver = notice.get();
-                        driver.setAddress(update.getMessage().getText());
-                        repository.save(driver);
-
-                        execute(new SendMessage(chatId.toString(), "ENTER NOTE"));
-                        updateStatus.put(chatId, 7);
-                    }
-                }
-                break;
-            case 7:
-                if (update.getMessage().getText().equalsIgnoreCase("EXIT ✅")) {
-                    updateStatus.put(chatId, 0);
-                } else if (repository.existsByChatId(chatId)) {
-                    Optional<Drivers> notice = repository.findByChatId(chatId);
-                    if (notice.isPresent()) {
-                        Drivers driver = notice.get();
-                        driver.setNote(update.getMessage().getText());
-                        repository.save(driver);
-
-                        updateButton(chatId);
-
-                        updateStatus.put(chatId, 0);
-                    }
-                }
-                break;
-            default:
-                break;
-        }
     }
 
     public void submitButton(Long chatId) {
@@ -663,7 +544,6 @@ public class DriverNoticeBot2 extends TelegramLongPollingBot {
         } catch (TelegramApiException e) {
             throw new RuntimeException(e);
         }
-
     }
 
     public void statusButton(Long chatId) {
@@ -682,8 +562,8 @@ public class DriverNoticeBot2 extends TelegramLongPollingBot {
         button2.setText(" \uD83D\uDFE2 REST");
         button2.setCallbackData("REST");
 
-        button3.setText(" \uD83D\uDFE2 VOCATION");
-        button3.setCallbackData("VOCATION");
+        button3.setText(" \uD83D\uDFE2 VACATION");
+        button3.setCallbackData("VACATION");
 
         rowInline.add(button);
         rowInline.add(button2);
@@ -1080,7 +960,7 @@ public class DriverNoticeBot2 extends TelegramLongPollingBot {
 
         KeyboardRow row3 = new KeyboardRow();
         row3.add("ADDRESS \uD83D\uDFE2");
-        row3.add("NOTICE \uD83D\uDFE2");
+        row3.add("NOTE \uD83D\uDFE2");
         row3.add("EXIT ✅");
 
         keyboard.add(row1);
@@ -1230,7 +1110,7 @@ public class DriverNoticeBot2 extends TelegramLongPollingBot {
 
     @Override
     public String getBotUsername() {
-        return botConfig.getBotToken();
+        return botConfig.getBotName();
     }
 
     public void sendMessage(String chatId, String text) {
